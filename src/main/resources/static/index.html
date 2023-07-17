@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cours SESSION</title>
+  </head>
+  <body>
+    <div>
+      <h2>Register</h2>
+      <form>
+        <input name="login" id="login" placeholder="login" />
+        <input
+          name="email"
+          id="email"
+          placeholder="email@toto.fr"
+          type="email"
+        />
+        <input name="password" id="password" placeholder="password" />
+        <input name="cpassword" id="cpassword" placeholder="cpassword" />
+        <button id="btnRegister" type="submit">enregistrer</button>
+      </form>
+    </div>
+
+    <div>
+      <h2>login</h2>
+      <form id="formLogin">
+        <input name="login" id="loginConnection" placeholder="login" />
+        <input name="password" id="passwordConnection" placeholder="password" />
+        <button type="submit">enregistrer</button>
+      </form>
+    </div>
+    <div id="info"></div>
+    <button id="btnInfo">InfoUser</button>
+    <script>
+      formLogin = document.getElementById("formLogin");
+      formLogin.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const login = document.getElementById("loginConnection").value;
+        const password = document.getElementById("passwordConnection").value;
+
+        fetch("http://localhost:8080/login", {
+          method: "post",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            login: login,
+            password: password,
+          }),
+        }).then((response) => {
+          console.log(response.body, "BODY");
+          console.log(response.status, "STATUS");
+        });
+      });
+
+      document.getElementById("btnInfo").addEventListener("click", (e) => {
+        fetch("http://localhost:8080/user/info").then(async (response) => {
+          const userInfo = await response.json();
+          console.log(userInfo);
+          document.getElementById("info").innerHTML = `
+                        <p>Login: ${userInfo.login}<p>
+                        <p>email: ${userInfo.email}<p>
+                        <p>Created: ${userInfo.created}<p>
+                    `;
+        });
+      });
+    </script>
+  </body>
+</html>
